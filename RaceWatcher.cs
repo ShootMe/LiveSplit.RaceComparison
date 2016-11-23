@@ -34,7 +34,7 @@ namespace LiveSplit.UI.Components {
 		}
 		public void CheckRace() {
 			try {
-				if ((srl != null && (srl.IsDisposed || !srl.Visible)) || (raceIRC != null && raceIRC.RaceState == RaceState.RaceEnded)) {
+				if ((srl != null && (srl.IsDisposed || !srl.Visible))) {
 					Clear();
 				}
 
