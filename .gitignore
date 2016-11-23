@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/obj
+/.vs/LiveSplit.RaceComparison/v14
+/bin
+/LiveSplit.RaceComparison.csproj.user
