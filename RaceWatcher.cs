@@ -115,12 +115,14 @@ namespace LiveSplit.UI.Components {
 						}
 
 						string[] splitAndSub = splitName.Split('|');
+						bool found = false;
 						if (splitAndSub.Length == 2) {
 							splitName = splitAndSub[0].Trim();
 							for (int i = raceIRC.Model.CurrentState.Run.Count - 1; i >= 0; i--) {
 								ISegment seg = raceIRC.Model.CurrentState.Run[i];
 								string segName = seg.Name.Trim();
 								if (segName.Equals(splitName, StringComparison.OrdinalIgnoreCase)) {
+									found = true;
 									RaceSplit split = null;
 									if (!RaceSplits.TryGetValue(e.Source.Name, out split)) {
 										split = new RaceSplit() { Name = e.Source.Name, SplitIndex = i, SplitName = segName, SplitTime = new Time(method, time), SubSplitIndex = int.Parse(splitAndSub[1]) };
@@ -149,6 +151,7 @@ namespace LiveSplit.UI.Components {
 								ISegment seg = raceIRC.Model.CurrentState.Run[i];
 								string segName = seg.Name.Trim();
 								if (segName.Equals(splitName, StringComparison.OrdinalIgnoreCase)) {
+									found = true;
 									RaceSplit split = null;
 									if (!RaceSplits.TryGetValue(e.Source.Name, out split)) {
 										split = new RaceSplit() { Name = e.Source.Name, SplitIndex = i, SplitName = segName, SplitTime = new Time(method, time), SubSplitIndex = int.MaxValue };
@@ -171,6 +174,30 @@ namespace LiveSplit.UI.Components {
 										split.SubSplitIndex = int.MaxValue;
 									}
 								}
+							}
+						}
+
+						if(!found) {
+							RaceSplit split = null;
+							if (!RaceSplits.TryGetValue(e.Source.Name, out split)) {
+								split = new RaceSplit() { Name = e.Source.Name, SplitIndex = raceIRC.Model.CurrentState.CurrentSplitIndex, SplitName = e.Source.Name, SplitTime = new Time(method, time), SubSplitIndex = int.MaxValue };
+							} else {
+								string historyName = e.Source.Name + "|" + split.SplitIndex + "|" + split.SubSplitIndex;
+								string newHistoryName = e.Source.Name + "|" + raceIRC.Model.CurrentState.CurrentSplitIndex + "|" + int.MaxValue;
+								if (!historyName.Equals(newHistoryName, StringComparison.OrdinalIgnoreCase)) {
+									if (!RaceSplits.ContainsKey(historyName)) {
+										RaceSplits.Add(historyName, split.Clone());
+									}
+								}
+
+								split.SplitIndex = raceIRC.Model.CurrentState.CurrentSplitIndex;
+								split.SplitName = e.Source.Name;
+								if (method == TimingMethod.RealTime) {
+									split.SplitTime = new Time(time, split.SplitTime.GameTime);
+								} else {
+									split.SplitTime = new Time(split.SplitTime.RealTime, time);
+								}
+								split.SubSplitIndex = int.MaxValue;
 							}
 						}
 					}
