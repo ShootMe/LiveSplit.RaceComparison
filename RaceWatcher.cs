@@ -177,10 +177,13 @@ namespace LiveSplit.UI.Components {
 							}
 						}
 
-						if(!found) {
+						if (!found) {
 							RaceSplit split = null;
+							if (splitAndSub.Length == 2) {
+								splitName = splitAndSub[0].Trim();
+							}
 							if (!RaceSplits.TryGetValue(e.Source.Name, out split)) {
-								split = new RaceSplit() { Name = e.Source.Name, SplitIndex = raceIRC.Model.CurrentState.CurrentSplitIndex, SplitName = e.Source.Name, SplitTime = new Time(method, time), SubSplitIndex = int.MaxValue };
+								split = new RaceSplit() { Name = e.Source.Name, SplitIndex = raceIRC.Model.CurrentState.CurrentSplitIndex, SplitName = splitName, SplitTime = new Time(method, time), SubSplitIndex = int.MaxValue };
 							} else {
 								string historyName = e.Source.Name + "|" + split.SplitIndex + "|" + split.SubSplitIndex;
 								string newHistoryName = e.Source.Name + "|" + raceIRC.Model.CurrentState.CurrentSplitIndex + "|" + int.MaxValue;
@@ -191,7 +194,7 @@ namespace LiveSplit.UI.Components {
 								}
 
 								split.SplitIndex = raceIRC.Model.CurrentState.CurrentSplitIndex;
-								split.SplitName = e.Source.Name;
+								split.SplitName = splitName;
 								if (method == TimingMethod.RealTime) {
 									split.SplitTime = new Time(time, split.SplitTime.GameTime);
 								} else {
