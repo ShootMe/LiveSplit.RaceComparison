@@ -133,7 +133,7 @@ namespace LiveSplit.UI.Components {
 				RacerTime.Text = TimeFormatter.Format(null);
 			} else {
 				RacerName.Text = RaceIndex + ": " + Split.Name;
-				RacerSplit.Text = Split.SplitName + (Split.SubSplitIndex == int.MaxValue ? Split.SplitIndex == state.Run.Count - 1 ? " - Finished" : "" : " - " + Split.SubSplitIndex);
+				RacerSplit.Text = Split.SplitName + (Split.SubSplitIndex == int.MaxValue ? "" : " - " + Split.SubSplitIndex);
 				RacerTime.Text = TimeFormatter.Format(Split.SplitTime.RealTime);
 			}
 			RacerName.ForeColor = Settings.TextColor;
